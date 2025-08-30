@@ -160,9 +160,9 @@ That said, you can also set environment variables for preferred providers.
 
 Is there a provider you’d like to see in OpenPilot? Is there an existing model that needs an update?
 
-OpenPilot’s default model listing is managed in [Catwalk](https://github.com/surya/catwalk), an community-supported, open source repository of OpenPilot-compatible models, and you’re welcome to contribute.
+OpenPilot’s default model listing is inspired by [Awesome-LLM](https://github.com/Hannibal046/Awesome-LLM), a comprehensive, community-curated collection of large language models and related resources. Explore the repository to discover new models and contribute your findings.
 
-<a href="https://github.com/surya/catwalk"><img width="174" height="174" alt="Catwalk Badge" src="https://github.com/user-attachments/assets/95b49515-fe82-4409-b10d-5beb0873787d" /></a>
+<a href="https://github.com/Hannibal046/Awesome-LLM"><img width="174" height="174" alt="Awesome-LLM Badge" src="https://raw.githubusercontent.com/sindresorhus/awesome/3f6ad2ae50bec8ff722d74965f888fd319882495/media/logo.svg" /></a>
 
 ## Configuration
 
