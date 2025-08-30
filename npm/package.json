@@ -1,0 +1,25 @@
+{
+  "name": "@suryastra/openpilot",
+  "version": "0.1.5",
+  "description": "OpenPilot CLI wrapper that downloads the native binary for your platform.",
+  "bin": {
+    "openpilot": "bin/openpilot.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "postinstall": "node bin/postinstall.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/surya/openpilot.git"
+  },
+  "author": "Jyotirmoy Das",
+  "license": "SEE LICENSE IN ../../LICENSE.md",
+  "engines": {
+    "node": ">=18"
+  }
+}

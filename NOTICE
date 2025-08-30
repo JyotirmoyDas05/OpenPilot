@@ -1,0 +1,17 @@
+# OpenPilot NOTICE
+
+This codebase was derived in part from portions of the CRUSH project
+(original module path: github.com/charmbracelet/crush). The module path was
+renamed to github.com/JyotirmoyDas05/openpilot on 2025-08-30.
+
+Retained third-party dependencies published by Charmbracelet (e.g. bubbletea,
+lipgloss, bubbles, glamour, etc.) remain under their respective licenses.
+
+All original license terms for any retained source files still apply. See
+LICENSE.md for the Functional Source License (FSL-1.1-MIT Future) and MIT
+license grant timing conditions.
+
+New or modified components authored in this repository after the rename are
+copyright © 2025 Suryastra and contributors.
+
+This NOTICE file is informational and does not supersede existing licenses.

@@ -1,0 +1,109 @@
+#!/usr/bin/env node
+const os = require('os');
+const path = require('path');
+const fs = require('fs');
+const https = require('https');
+const { spawnSync } = require('child_process');
+
+const version = process.env.OPENPILOT_VERSION || 'latest';
+const repo = process.env.OPENPILOT_REPO || 'suryastra/openpilot'; // owner/repo
+const debug = !!process.env.OPENPILOT_DEBUG;
+const platformMap = { win32: 'windows', darwin: 'darwin', linux: 'linux' };
+// Common Go arch names to release arch names mapping; add more as needed
+const archMap = { x64: 'x86_64', amd64: 'x86_64', arm64: 'arm64', arm: 'arm', ia32: 'i386' };
+
+function log(msg) { console.log('[openpilot]', msg); }
+function debugLog(msg) { if (debug) log('[debug] ' + msg); }
+function fail(msg) { console.error('[openpilot] ' + msg); process.exit(1); }
+
+const plat = platformMap[process.platform];
+if (!plat) fail('Unsupported platform: ' + process.platform);
+const arch = archMap[process.arch];
+if (!arch) fail('Unsupported architecture: ' + process.arch);
+
+// Generate potential asset names in decreasing preference order.
+function candidateAssets(v) {
+  const baseVersionTag = v === 'latest' ? 'latest' : 'v' + v;
+  const namePatterns = [
+    // New canonical: openpilot_<os>_<arch>.tar.gz (for latest) or openpilot_<version>_<os>_<arch>.tar.gz
+    v === 'latest' ? `openpilot_${plat}_${arch}.tar.gz` : `openpilot_${v}_${plat}_${arch}.tar.gz`,
+    // Alternate without version always: openpilot-${plat}-${arch}.tar.gz
+    `openpilot-${plat}-${arch}.tar.gz`,
+    // Legacy pattern maybe: openpilot_${plat}_${arch}.tgz
+    v === 'latest' ? `openpilot_${plat}_${arch}.tgz` : `openpilot_${v}_${plat}_${arch}.tgz`,
+  ];
+  return namePatterns.map(n => ({
+    url: `https://github.com/${repo}/releases/${baseVersionTag === 'latest' ? 'latest/download' : 'download/' + baseVersionTag}/${n}`,
+    name: n
+  }));
+}
+
+const candidates = candidateAssets(version);
+const destDir = path.join(__dirname, '..', 'dist');
+const binDir = path.join(__dirname);
+fs.mkdirSync(destDir, { recursive: true });
+
+log('detect platform=' + plat + ' arch=' + arch + ' version=' + version + ' repo=' + repo);
+debugLog('candidates: ' + candidates.map(c => c.name).join(', '));
+
+function download(url, file) {
+  return new Promise((resolve, reject) => {
+    const f = fs.createWriteStream(file);
+    https.get(url, res => {
+      if (res.statusCode !== 200) {
+        reject(new Error('HTTP ' + res.statusCode));
+        return;
+      }
+      res.pipe(f);
+      f.on('finish', () => f.close(resolve));
+    }).on('error', reject);
+  });
+}
+
+(async () => {
+  const tarPath = path.join(destDir, 'openpilot.tgz');
+  let lastErr = null;
+  for (const c of candidates) {
+    log('trying ' + c.url);
+    try {
+      await download(c.url, tarPath);
+      log('downloaded ' + c.name);
+      lastErr = null;
+      break;
+    } catch (e) {
+      debugLog('failed ' + c.name + ': ' + e.message);
+      lastErr = e;
+    }
+  }
+  if (lastErr) {
+    fail('All download attempts failed. Tried: ' + candidates.map(c => c.url).join(', '));
+  }
+  // Extract
+  const tar = process.platform === 'win32' ? 'tar.exe' : 'tar';
+  const result = spawnSync(tar, ['-xzf', tarPath, '-C', destDir]);
+  if (result.status !== 0) {
+    fail('Extraction failed');
+  }
+  // Find binary
+  function findBin(dir) {
+    const entries = fs.readdirSync(dir);
+    for (const e of entries) {
+      const p = path.join(dir, e);
+      const stat = fs.statSync(p);
+      if (stat.isFile() && e === 'openpilot' + (process.platform === 'win32' ? '.exe' : '')) {
+        return p;
+      }
+      if (stat.isDirectory()) {
+        const f = findBin(p);
+        if (f) return f;
+      }
+    }
+    return null;
+  }
+  const binary = findBin(destDir);
+  if (!binary) fail('Binary not found after extraction');
+  const finalPath = path.join(binDir, 'openpilot' + (process.platform === 'win32' ? '.exe' : ''));
+  fs.copyFileSync(binary, finalPath);
+  fs.chmodSync(finalPath, 0o755);
+  log('installed binary to ' + finalPath);
+})();
