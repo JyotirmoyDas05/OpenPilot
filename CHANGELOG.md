@@ -1,3 +1,7 @@
+## <small>1.1.3 (2025-08-31)</small>
+
+* fix: remove invalid --skip-validate flag from goreleaser command ([69e46cd](https://github.com/JyotirmoyDas05/OpenPilot/commit/69e46cd))
+
 ## <small>1.1.2 (2025-08-31)</small>
 
 * fix: integrate GoReleaser with semantic-release using exec plugin for proper release automation ([9968cb9](https://github.com/JyotirmoyDas05/OpenPilot/commit/9968cb9))
