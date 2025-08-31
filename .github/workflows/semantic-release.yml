@@ -21,8 +21,15 @@ jobs:
         with:
           node-version: 20
           cache: npm
-      - name: Install dependencies
-        run: npm ci
+      - name: Use npm ci if lockfile present, else npm install
+        run: |
+          if [ -f package-lock.json ]; then
+            echo "Lockfile found. Using npm ci.";
+            npm ci;
+          else
+            echo "No lockfile found. Using npm install.";
+            npm install;
+          fi
       - name: Build Go binaries (optional)
         run: |
           go version || sudo apt-get update && sudo apt-get install -y golang
