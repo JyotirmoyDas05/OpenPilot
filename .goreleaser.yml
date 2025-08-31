@@ -1,68 +1,20 @@
-# yaml-language-server: $schema=https://goreleaser.com/static/schema-pro.json
-# vim: set ts=2 sw=2 tw=0 fo=jcroql
-version: 2
-
+# GoReleaser config for OpenPilot
 project_name: openpilot
-
-metadata:
-  mod_timestamp: "{{ .CommitTimestamp }}"
-  license: "FSL-1.1-MIT"
-  homepage: "https://suryastra.sh/openpilot"
-  description: "A powerful terminal-based AI assistant for developers, providing intelligent coding assistance directly in your terminal."
-  full_description: "A powerful terminal-based AI assistant for developers, providing intelligent coding assistance directly in your terminal."
-  maintainers:
-    - "kujtimiihoxha <kujtim@surya.sh>"
-    - "caarlos0 <carlos@surya.sh>" # for aur
-
-nightly:
-  publish_release: true
-  keep_single_release: true
-  version_template: "{{ incminor .Version }}-nightly"
-
-snapshot:
-  version_template: "0.0.0-{{ .Timestamp }}"
 
 before:
   hooks:
     - go mod tidy
-    - rm -rf completions
-    - mkdir completions
-    - rm -rf manpages
-    - mkdir manpages
-    - sh -c 'go run . completion bash >./completions/openpilot.bash'
-    - sh -c 'go run . completion zsh >./completions/openpilot.zsh'
-    - sh -c 'go run . completion fish >./completions/openpilot.fish'
-    - sh -c 'go run . man | gzip -c >./manpages/openpilot.1.gz'
-
-# gomod:
-#   proxy: true
 
 builds:
   - env:
       - CGO_ENABLED=0
-      - GOEXPERIMENT=greenteagc
     goos:
       - linux
       - darwin
       - windows
-      - freebsd
-      - openbsd
-      - netbsd
-      - android
     goarch:
       - amd64
       - arm64
-      - "386"
-      - arm
-    goarm:
-      - "7"
-    ignore:
-      - goos: android
-        goarch: amd64
-      - goos: android
-        goarch: arm
-      - goos: android
-        goarch: "386"
     ldflags:
       - -s -w -X github.com/JyotirmoyDas05/openpilot/internal/version.Version={{.Version}}
 
@@ -79,8 +31,6 @@ archives:
     files:
       - README*
       - LICENSE*
-      - manpages/*
-      - completions/*
     format_overrides:
       - goos: windows
         formats: [zip]
@@ -88,198 +38,8 @@ archives:
 checksum:
   name_template: "checksums.txt"
 
-aur_sources:
-  - private_key: "{{ .Env.AUR_KEY }}"
-    git_url: "ssh://aur@aur.archlinux.org/openpilot.git"
-    commit_author:
-      name: "Surya"
-      email: "openpilot@users.noreply.github.com"
-    makedepends:
-      - go
-      - git
-    prepare: |-
-      go mod download
-    build: |-
-      mkdir completions
-      mkdir manpages
-      export CGO_CPPFLAGS="${CPPFLAGS}"
-      export CGO_CFLAGS="${CFLAGS}"
-      export CGO_CXXFLAGS="${CXXFLAGS}"
-      export CGO_LDFLAGS="${LDFLAGS}"
-      export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
-      go build -ldflags="-w -s -buildid='' -linkmode=external -X main.version=v${pkgver}" .
-      ./openpilot completion bash >./completions/openpilot.bash
-      ./openpilot completion zsh >./completions/openpilot.zsh
-      ./openpilot completion fish >./completions/openpilot.fish
-      ./openpilot man | gzip -c >./manpages/openpilot.1.gz
-    package: |-
-      # bin
-      install -Dm755 "./openpilot" "${pkgdir}/usr/bin/openpilot"
-      # license
-      mkdir -p "${pkgdir}/usr/share/licenses/openpilot/"
-      install -Dm644 ./LICENSE* "${pkgdir}/usr/share/licenses/openpilot/"
-      # completions
-      mkdir -p "${pkgdir}/usr/share/bash-completion/completions/"
-      mkdir -p "${pkgdir}/usr/share/zsh/site-functions/"
-      mkdir -p "${pkgdir}/usr/share/fish/vendor_completions.d/"
-      install -Dm644 "./completions/openpilot.bash" "${pkgdir}/usr/share/bash-completion/completions/openpilot"
-      install -Dm644 "./completions/openpilot.zsh" "${pkgdir}/usr/share/zsh/site-functions/_openpilot"
-      install -Dm644 "./completions/openpilot.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/openpilot.fish"
-      # man pages
-      install -Dm644 "./manpages/openpilot.1.gz" "${pkgdir}/usr/share/man/man1/openpilot.1.gz"
-      # readme
-      mkdir -pv "${pkgdir}/usr/share/doc/openpilot/"
-      install -Dm644 README* "${pkgdir}/usr/share/doc/openpilot/"
-
-aurs:
-  - private_key: "{{ .Env.AUR_KEY }}"
-    git_url: "ssh://aur@aur.archlinux.org/openpilot-bin.git"
-    commit_author:
-      name: "Surya"
-      email: "openpilot@users.noreply.github.com"
-    provides:
-      - openpilot
-    conflicts:
-      - openpilot
-    package: |-
-      cd "${srcdir}/openpilot_${pkgver}_Linux_${CARCH}"
-      # bin
-      install -Dm755 "./openpilot" "${pkgdir}/usr/bin/openpilot"
-      # license
-      mkdir -p "${pkgdir}/usr/share/licenses/openpilot/"
-      install -Dm644 ./LICENSE* "${pkgdir}/usr/share/licenses/openpilot/"
-      # completions
-      mkdir -p "${pkgdir}/usr/share/bash-completion/completions/"
-      mkdir -p "${pkgdir}/usr/share/zsh/site-functions/"
-      mkdir -p "${pkgdir}/usr/share/fish/vendor_completions.d/"
-      install -Dm644 "./completions/openpilot.bash" "${pkgdir}/usr/share/bash-completion/completions/openpilot"
-      install -Dm644 "./completions/openpilot.zsh" "${pkgdir}/usr/share/zsh/site-functions/_openpilot"
-      install -Dm644 "./completions/openpilot.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/openpilot.fish"
-      # man pages
-      install -Dm644 "./manpages/openpilot.1.gz" "${pkgdir}/usr/share/man/man1/openpilot.1.gz"
-      # readme
-      mkdir -pv "${pkgdir}/usr/share/doc/openpilot/"
-      install -Dm644 README* "${pkgdir}/usr/share/doc/openpilot/"
-
-furies:
-  - disable: "{{ .IsNightly }}"
-    account: "{{ with .Env.FURY_TOKEN }}charmcli{{ else }}{{ end }}"
-    secret_name: FURY_TOKEN
-
-brews:
-  - repository:
-      owner: openpilot-ai
-      name: homebrew-tap
-      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
-    commit_author:
-      name: "OpenPilot"
-      email: "openpilot@users.noreply.github.com"
-    goarm: 7
-    extra_install: |-
-      bash_completion.install "completions/{{ .ProjectName }}.bash" => "{{ .ProjectName }}"
-      zsh_completion.install "completions/{{ .ProjectName }}.zsh" => "_{{ .ProjectName }}"
-      fish_completion.install "completions/{{ .ProjectName }}.fish"
-      man1.install "manpages/{{ .ProjectName }}.1.gz"
-
-scoops:
-  - repository:
-      owner: openpilot-ai
-      name: scoop-bucket
-      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
-    commit_author:
-      name: "OpenPilot"
-      email: "openpilot@users.noreply.github.com"
-
-npms:
-  - name: "openpilot-cli"
-    repository: "git+https://github.com/JyotirmoyDas05/openpilot.git"
-    bugs: https://github.com/JyotirmoyDas05/openpilot/issues
-    access: public
-
-nfpms:
-  - formats:
-      - apk
-      - deb
-      - rpm
-      - archlinux
-      - termux.deb
-    file_name_template: "{{ .ConventionalFileName }}"
-    contents:
-      - src: ./completions/openpilot.bash
-        dst: /etc/bash_completion.d/openpilot
-      - src: ./completions/openpilot.fish
-        dst: /usr/share/fish/vendor_completions.d/openpilot.fish
-      - src: ./completions/openpilot.zsh
-        dst: /usr/share/zsh/site-functions/_openpilot
-      - src: ./manpages/openpilot.1.gz
-        dst: /usr/share/man/man1/openpilot.1.gz
-    rpm:
-      signature:
-        key_file: '{{ if ne (index .Env "GPG_KEY_PATH") "" }}{{ .Env.GPG_KEY_PATH }}{{ else }}{{ end }}'
-    deb:
-      signature:
-        key_file: '{{ if ne (index .Env "GPG_KEY_PATH") "" }}{{ .Env.GPG_KEY_PATH }}{{ else }}{{ end }}'
-
-signs:
-  - cmd: cosign
-    certificate: "${artifact}.pem"
-    args:
-      - sign-blob
-      - "--output-certificate=${certificate}"
-      - "--output-signature=${signature}"
-      - "${artifact}"
-      - "--yes"
-    artifacts: checksum
-    output: true
-
-source:
-  enabled: true
-
-sboms:
-  - artifacts: archive
-  - id: source
-    artifacts: source
-
-nix:
-  - repository:
-      owner: "openpilot-ai"
-      name: nur
-      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
-    commit_author:
-      name: "OpenPilot"
-      email: "openpilot@users.noreply.github.com"
-    license: fsl11Mit
-    extra_install: |-
-      installManPage ./manpages/openpilot.1.gz
-      installShellCompletion ./completions/*
-
-winget:
-  - publisher: openpilot
-    copyright: OpenPilot
-    publisher_url: https://surya.sh/openpilot
-    release_notes_url: "https://github.com/JyotirmoyDas05/openpilot/releases/tag/{{.Tag}}"
-    license_url: https://github.com/JyotirmoyDas05/openpilot/blob/main/LICENSE.md
-    commit_author:
-      name: "OpenPilot"
-      email: "openpilot@users.noreply.github.com"
-    repository:
-      owner: "openpilot-ai"
-      name: winget-pkgs
-      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
-      branch: "openpilot-{{.Version}}"
-      pull_request:
-        enabled: true
-        draft: false
-        check_boxes: true
-        base:
-          owner: microsoft
-          name: winget-pkgs
-          branch: master
-
 changelog:
   sort: asc
-  disable: "{{ .IsNightly }}"
-  use: github
   filters:
     exclude:
       - "^(build|ci): "
@@ -295,7 +55,6 @@ changelog:
       - "^docs: update$"
       - "^test:"
       - "^test\\("
-      - "merge conflict"
       - "merge conflict"
       - Merge branch
       - Merge pull request
@@ -314,13 +73,10 @@ changelog:
       regexp: '^.*?(fix|refactor)(\(.+\))??!?:.+$'
       order: 200
     - title: "Documentation updates"
-      regexp: ^.*?docs?(\(.+\))??!?:.+$
+      regexp: ^.*?docs?(\(.+\))??!?:.+$'
       order: 400
     - title: Other work
       order: 9999
 
 release:
   prerelease: auto
-  footer:
-    from_url:
-      url: https://raw.githubusercontent.com/charmbracelet/meta/main/footer.md
