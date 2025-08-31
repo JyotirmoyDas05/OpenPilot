@@ -1,3 +1,7 @@
+## <small>1.0.5 (2025-08-31)</small>
+
+* fix: update version to 1.0.5 in package.json ([22729fa](https://github.com/JyotirmoyDas05/OpenPilot/commit/22729fa))
+
 ## <small>1.0.4 (2025-08-31)</small>
 
 * fix: dummy commit to force version 1.0.5 ([a8b260e](https://github.com/JyotirmoyDas05/OpenPilot/commit/a8b260e))
