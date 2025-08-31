@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://goreleaser.com/static/schema-pro.json
 # vim: set ts=2 sw=2 tw=0 fo=jcroql
-# Asset naming updated to use x86_64 for cross-platform compatibility - ready for release
+# Cross-platform binary assets with x86_64 naming for Windows compatibility
 version: 2
 
 project_name: openpilot
