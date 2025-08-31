@@ -21,13 +21,16 @@ jobs:
         with:
           node-version: 20
           cache: npm
-      - name: Use npm ci if lockfile present, else npm install
+      - name: Install dependencies (ci with fallback)
         run: |
           if [ -f package-lock.json ]; then
-            echo "Lockfile found. Using npm ci.";
-            npm ci;
+            echo "Attempting npm ci (lockfile present)";
+            if ! npm ci; then
+              echo "npm ci failed; falling back to npm install";
+              npm install;
+            fi
           else
-            echo "No lockfile found. Using npm install.";
+            echo "No lockfile found; running npm install";
             npm install;
           fi
       - name: Build Go binaries (optional)
