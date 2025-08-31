@@ -1,49 +1,89 @@
 # @suryastra/openpilot
 
-Node.js shim for the OpenPilot CLI. Installs the native binary for your OS/arch from GitHub Releases.
+OpenPilot CLI wrapper for Node.js that automatically downloads the native binary for your platform from GitHub Releases.
 
-## Install
+## Quick Start
 
-For Global Install
+### Global Installation
+
+Install globally to use the `openpilot` command anywhere:
 
 ```bash
 npm install -g @suryastra/openpilot
+openpilot --help
 ```
 
-### or
+### One-time Usage
 
-For One time use
+Run without installing globally:
 
 ```bash
-npx @suryastra/openpilot
+npx @suryastra/openpilot --help
 ```
 
-Environment variables:
+### Project Dependency
 
-- `OPENPILOT_VERSION` pin a version (default latest)
-- `OPENPILOT_REPO` override GitHub repo (default `suryastra/openpilot`)
-- `OPENPILOT_DEBUG` set to `1` for verbose postinstall logging
-
-Set `OPENPILOT_VERSION` to pin a version:
+Add to your Node.js project:
 
 ```bash
-OPENPILOT_VERSION=0.1.0 npx @suryastra/openpilot --version
+npm install @suryastra/openpilot
 ```
 
-## How it works
+## Configuration
 
-- Postinstall script downloads the archive from GitHub Releases
-- Extracts and places the `openpilot` binary into the package bin dir
-- `openpilot` JavaScript shim spawns the binary
+Environment variables for customization:
+
+| Variable            | Description                | Default                    |
+| ------------------- | -------------------------- | -------------------------- |
+| `OPENPILOT_VERSION` | Pin a specific version     | `latest`                   |
+| `OPENPILOT_REPO`    | Override GitHub repository | `JyotirmoyDas05/openpilot` |
+| `OPENPILOT_DEBUG`   | Enable verbose logging     | `0`                        |
+
+### Version Pinning Example
+
+```bash
+OPENPILOT_VERSION=1.0.6 npx @suryastra/openpilot --version
+```
+
+## How It Works
+
+1. **Postinstall**: Downloads the appropriate binary archive from GitHub Releases
+2. **Extraction**: Unpacks and places the `openpilot` binary in the package bin directory
+3. **Execution**: JavaScript shim spawns the native binary with your arguments
+
+## Platform Support
+
+- **Windows**: x86_64, ARM64 (requires Windows 10+ with tar support)
+- **macOS**: x86_64 (Intel), ARM64 (Apple Silicon)
+- **Linux**: x86_64, ARM64
 
 ## Troubleshooting
 
-- Ensure Node 18+
-- Corporate proxies may block the download: set `HTTPS_PROXY`
-- Windows extraction requires `tar` in PATH (included in recent Git and Windows 10+). If missing, manually download release.
-- If download fails, enable debug: `OPENPILOT_DEBUG=1 npm i @suryastra/openpilot` to see attempted asset names.
-- The installer tries several archive name patterns (with/without version, .tar.gz/.tgz). If none match, manually fetch from Releases and place binary as `node_modules/@suryastra/openpilot/bin/openpilot`.
+### Common Issues
+
+- **Node.js Version**: Requires Node.js 18 or higher
+- **Corporate Proxies**: Set `HTTPS_PROXY` environment variable if downloads are blocked
+- **Windows Extraction**: Requires `tar` command (included in Git for Windows and Windows 10+)
+
+### Debug Mode
+
+Enable detailed logging to troubleshoot download issues:
+
+```bash
+OPENPILOT_DEBUG=1 npm install @suryastra/openpilot
+```
+
+### Manual Installation
+
+If automatic download fails, manually download the binary:
+
+1. Visit [GitHub Releases](https://github.com/JyotirmoyDas05/openpilot/releases)
+2. Download the appropriate archive for your platform
+3. Extract and place the binary as:
+   ```
+   node_modules/@suryastra/openpilot/bin/openpilot[.exe]
+   ```
 
 ## License
 
-See project root LICENSE.
+See [LICENSE.md](../../LICENSE.md) in the project root.
