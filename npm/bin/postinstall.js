@@ -8,7 +8,7 @@ const { spawnSync } = require('child_process');
 // Requested version ("latest" means query the latest GitHub release). We also
 // fall back to the wrapper's own package.json version if latest assets are not yet published.
 const version = process.env.OPENPILOT_VERSION || 'latest';
-const repo = process.env.OPENPILOT_REPO || 'suryastra/openpilot'; // owner/repo
+const repo = process.env.OPENPILOT_REPO || 'JyotirmoyDas05/openpilot'; // owner/repo
 const debug = !!process.env.OPENPILOT_DEBUG;
 const platformMap = { win32: 'windows', darwin: 'darwin', linux: 'linux' };
 // Common Go arch names to release arch names mapping; add more as needed
