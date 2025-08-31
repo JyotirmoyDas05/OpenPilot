@@ -26,14 +26,18 @@ if (!arch) fail('Unsupported architecture: ' + process.arch);
 // Generate potential asset names in decreasing preference order.
 function candidateAssets(v) {
   const baseVersionTag = v === 'latest' ? 'latest' : 'v' + v;
-  const namePatterns = [
-    // New canonical: openpilot_<os>_<arch>.tar.gz (for latest) or openpilot_<version>_<os>_<arch>.tar.gz
-    v === 'latest' ? `openpilot_${plat}_${arch}.tar.gz` : `openpilot_${v}_${plat}_${arch}.tar.gz`,
-    // Alternate without version always: openpilot-${plat}-${arch}.tar.gz
-    `openpilot-${plat}-${arch}.tar.gz`,
-    // Legacy pattern maybe: openpilot_${plat}_${arch}.tgz
-    v === 'latest' ? `openpilot_${plat}_${arch}.tgz` : `openpilot_${v}_${plat}_${arch}.tgz`,
-  ];
+  const namePatterns = [];
+  // Canonical tar.gz (versioned or latest alias)
+  namePatterns.push(v === 'latest' ? `openpilot_${plat}_${arch}.tar.gz` : `openpilot_${v}_${plat}_${arch}.tar.gz`);
+  // Alternate dash style
+  namePatterns.push(`openpilot-${plat}-${arch}.tar.gz`);
+  // Legacy tgz
+  namePatterns.push(v === 'latest' ? `openpilot_${plat}_${arch}.tgz` : `openpilot_${v}_${plat}_${arch}.tgz`);
+  // Windows zip variants (GoReleaser may produce .zip for windows)
+  if (plat === 'windows') {
+    namePatterns.push(v === 'latest' ? `openpilot_${plat}_${arch}.zip` : `openpilot_${v}_${plat}_${arch}.zip`);
+    namePatterns.push(`openpilot-${plat}-${arch}.zip`);
+  }
   return namePatterns.map(n => ({
     url: `https://github.com/${repo}/releases/${baseVersionTag === 'latest' ? 'latest/download' : 'download/' + baseVersionTag}/${n}`,
     name: n
@@ -63,12 +67,12 @@ function download(url, file) {
 }
 
 (async () => {
-  const tarPath = path.join(destDir, 'openpilot.tgz');
+  const archivePath = path.join(destDir, 'openpilot_download');
   let lastErr = null;
   for (const c of candidates) {
     log('trying ' + c.url);
     try {
-      await download(c.url, tarPath);
+      await download(c.url, archivePath);
       log('downloaded ' + c.name);
       lastErr = null;
       break;
@@ -90,7 +94,7 @@ function download(url, file) {
           for (const c of versioned) {
             log('trying ' + c.url);
             try {
-              await download(c.url, tarPath);
+              await download(c.url, archivePath);
               log('downloaded ' + c.name);
               lastErr = null;
               break;
@@ -108,12 +112,31 @@ function download(url, file) {
       fail('All download attempts failed. Tried: ' + candidates.map(c => c.url).join(', '));
     }
   }
-  // Extract
-  const tar = process.platform === 'win32' ? 'tar.exe' : 'tar';
-  const result = spawnSync(tar, ['-xzf', tarPath, '-C', destDir]);
-  if (result.status !== 0) {
-    fail('Extraction failed');
+  // Determine archive type by extension and extract accordingly.
+  let extracted = false;
+  const lower = candidates.concat([]).find(c => fs.existsSync(archivePath)) ? archivePath.toLowerCase() : archivePath.toLowerCase();
+  if (archivePath.endsWith('.zip') || lower.endsWith('.zip')) {
+    if (process.platform === 'win32') {
+      // Use PowerShell Expand-Archive (available by default) for zip
+      const ps = spawnSync('powershell', ['-NoProfile', '-Command', `Expand-Archive -Path '${archivePath}' -DestinationPath '${destDir}' -Force`]);
+      if (ps.status !== 0) {
+        fail('ZIP extraction failed');
+      }
+      extracted = true;
+    } else {
+      const unzip = spawnSync('unzip', ['-o', archivePath, '-d', destDir]);
+      if (unzip.status !== 0) fail('ZIP extraction failed');
+      extracted = true;
+    }
+  } else {
+    const tar = process.platform === 'win32' ? 'tar.exe' : 'tar';
+    const result = spawnSync(tar, ['-xzf', archivePath, '-C', destDir]);
+    if (result.status !== 0) {
+      fail('Tar extraction failed');
+    }
+    extracted = true;
   }
+  if (!extracted) fail('Unknown archive type');
   // Find binary
   function findBin(dir) {
     const entries = fs.readdirSync(dir);
