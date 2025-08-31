@@ -1,3 +1,8 @@
+## <small>1.1.6 (2025-08-31)</small>
+
+* Merge branch 'main' of https://github.com/JyotirmoyDas05/OpenPilot ([ab3334e](https://github.com/JyotirmoyDas05/OpenPilot/commit/ab3334e))
+* fix: commit lockfile changes before GoReleaser to prevent dirty working directory ([ff31801](https://github.com/JyotirmoyDas05/OpenPilot/commit/ff31801))
+
 ## <small>1.1.5 (2025-08-31)</small>
 
 * Merge branch 'main' of https://github.com/JyotirmoyDas05/OpenPilot ([437f3bf](https://github.com/JyotirmoyDas05/OpenPilot/commit/437f3bf))
