@@ -46,7 +46,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          goreleaser build --clean
+          goreleaser build --clean --snapshot
           ls -l dist
       - name: Prepare latest-style duplicate assets
         run: |
