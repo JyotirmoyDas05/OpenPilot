@@ -1,3 +1,7 @@
+## <small>1.0.4 (2025-08-31)</small>
+
+* fix: update default repository in postinstall script to JyotirmoyDas05/openpilot ([de56df3](https://github.com/JyotirmoyDas05/OpenPilot/commit/de56df3))
+
 ## <small>1.0.3 (2025-08-31)</small>
 
 * fix: enhance asset name patterns in postinstall script for better compatibility and delete redundant ([c195273](https://github.com/JyotirmoyDas05/OpenPilot/commit/c195273))
