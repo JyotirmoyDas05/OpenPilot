@@ -54,7 +54,13 @@ jobs:
           for f in dist/openpilot_*_*; do
             base=$(basename "$f")
             latestName=$(echo "$base" | sed -E "s/openpilot_[0-9]+\.[0-9]+\.[0-9]+_/openpilot_/")
-            if [ ! -f "dist/$latestName" ]; then cp "$f" "dist/$latestName"; fi
+            if [ ! -e "dist/$latestName" ]; then
+              if [ -d "$f" ]; then
+                cp -r "$f" "dist/$latestName"
+              else
+                cp "$f" "dist/$latestName"
+              fi
+            fi
           done
           ls -l dist
       - name: Semantic Release

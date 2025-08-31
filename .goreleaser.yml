@@ -28,9 +28,6 @@ archives:
       {{- .Os }}_
       {{- .Arch }}
     wrap_in_directory: false
-    files:
-      - README*
-      - LICENSE*
     format_overrides:
       - goos: windows
         formats: [zip]
