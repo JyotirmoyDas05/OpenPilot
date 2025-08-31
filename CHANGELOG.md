@@ -1,3 +1,8 @@
+## <small>1.1.5 (2025-08-31)</small>
+
+* Merge branch 'main' of https://github.com/JyotirmoyDas05/OpenPilot ([437f3bf](https://github.com/JyotirmoyDas05/OpenPilot/commit/437f3bf))
+* fix: add build artifacts to gitignore and clean working directory in workflow ([fc1171f](https://github.com/JyotirmoyDas05/OpenPilot/commit/fc1171f))
+
 ## <small>1.1.4 (2025-08-31)</small>
 
 * fix: update GoReleaser comment for better asset description ([ef466d3](https://github.com/JyotirmoyDas05/OpenPilot/commit/ef466d3))
