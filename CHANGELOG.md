@@ -1,3 +1,7 @@
+## <small>1.1.8 (2025-08-31)</small>
+
+* fix(npm): handle HTTP redirects in postinstall script ([984016e](https://github.com/JyotirmoyDas05/OpenPilot/commit/984016e))
+
 ## <small>1.1.7 (2025-08-31)</small>
 
 * fix: prevent dirty working directory by using --no-save for npm installs ([77cc848](https://github.com/JyotirmoyDas05/OpenPilot/commit/77cc848))
