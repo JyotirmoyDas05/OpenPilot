@@ -1,3 +1,7 @@
+## <small>1.1.7 (2025-08-31)</small>
+
+* fix: prevent dirty working directory by using --no-save for npm installs ([77cc848](https://github.com/JyotirmoyDas05/OpenPilot/commit/77cc848))
+
 ## <small>1.1.6 (2025-08-31)</small>
 
 * Merge branch 'main' of https://github.com/JyotirmoyDas05/OpenPilot ([ab3334e](https://github.com/JyotirmoyDas05/OpenPilot/commit/ab3334e))
