@@ -29,8 +29,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: goreleaser release --clean
-      - name: Duplicate latest-style assets
+      - name: Prepare latest-style duplicate assets
         run: |
+          set -euo pipefail
           TAG=${GITHUB_REF#refs/tags/}
           VER=${TAG#v}
           for f in dist/openpilot_${VER}_*; do
@@ -38,8 +39,11 @@ jobs:
             latestName=$(echo "$base" | sed -E "s/openpilot_${VER}_/openpilot_/")
             if [ ! -f "dist/$latestName" ]; then cp "$f" "dist/$latestName"; fi
           done
-      - name: Create GitHub Release / Upload Assets
+          ls -l dist
+      - name: Create / Update GitHub Release & Upload Assets
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/openpilot_*
+          files: |
+            dist/openpilot_*
           fail_on_unmatched_files: false
+          append_body: true

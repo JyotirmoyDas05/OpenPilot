@@ -5,6 +5,8 @@ const fs = require('fs');
 const https = require('https');
 const { spawnSync } = require('child_process');
 
+// Requested version ("latest" means query the latest GitHub release). We also
+// fall back to the wrapper's own package.json version if latest assets are not yet published.
 const version = process.env.OPENPILOT_VERSION || 'latest';
 const repo = process.env.OPENPILOT_REPO || 'suryastra/openpilot'; // owner/repo
 const debug = !!process.env.OPENPILOT_DEBUG;
@@ -76,7 +78,35 @@ function download(url, file) {
     }
   }
   if (lastErr) {
-    fail('All download attempts failed. Tried: ' + candidates.map(c => c.url).join(', '));
+    // Fallback: if we asked for 'latest', derive a concrete version from our package.json
+    // and try versioned asset naming patterns (with and without v prefix) before giving up.
+    if (version === 'latest') {
+      try {
+        const pkg = require(path.join(__dirname, '..', 'package.json'));
+        const pv = pkg.version.replace(/^v/, '');
+        if (pv) {
+          log('latest assets missing; retrying with package version ' + pv);
+          const versioned = candidateAssets(pv);
+          for (const c of versioned) {
+            log('trying ' + c.url);
+            try {
+              await download(c.url, tarPath);
+              log('downloaded ' + c.name);
+              lastErr = null;
+              break;
+            } catch (e) {
+              debugLog('failed ' + c.name + ': ' + e.message);
+              lastErr = e;
+            }
+          }
+        }
+      } catch (e) {
+        debugLog('failed to load package version fallback: ' + e.message);
+      }
+    }
+    if (lastErr) {
+      fail('All download attempts failed. Tried: ' + candidates.map(c => c.url).join(', '));
+    }
   }
   // Extract
   const tar = process.platform === 'win32' ? 'tar.exe' : 'tar';
