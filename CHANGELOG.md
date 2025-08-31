@@ -1,3 +1,7 @@
+## <small>1.0.3 (2025-08-31)</small>
+
+* fix: enhance asset name patterns in postinstall script for better compatibility and delete redundant ([c195273](https://github.com/JyotirmoyDas05/OpenPilot/commit/c195273))
+
 ## <small>1.0.2 (2025-08-31)</small>
 
 * fix: enhance asset name patterns and improve archive extraction handling in postinstall script ([d2642ca](https://github.com/JyotirmoyDas05/OpenPilot/commit/d2642ca))
