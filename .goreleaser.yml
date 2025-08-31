@@ -64,7 +64,7 @@ builds:
       - goos: android
         goarch: "386"
     ldflags:
-  - -s -w -X github.com/JyotirmoyDas05/openpilot/internal/version.Version={{.Version}}
+      - -s -w -X github.com/JyotirmoyDas05/openpilot/internal/version.Version={{.Version}}
 
 archives:
   - name_template: >-
