@@ -1,3 +1,7 @@
+## <small>1.0.1 (2025-08-31)</small>
+
+* fix: enhance asset handling in release workflow and improve error fallback in postinstall script ([f22c69c](https://github.com/JyotirmoyDas05/OpenPilot/commit/f22c69c))
+
 ## 1.0.0 (2025-08-31)
 
 * fix: 2nd fix for release ([72ee7e4](https://github.com/JyotirmoyDas05/OpenPilot/commit/72ee7e4))
