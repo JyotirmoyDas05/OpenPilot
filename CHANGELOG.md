@@ -1,3 +1,8 @@
+## <small>1.0.5 (2025-08-31)</small>
+
+* fix: clean up duplicate changelog entries and improve structure ([c28cd5a](https://github.com/JyotirmoyDas05/OpenPilot/commit/c28cd5a))
+* fix: improve changelog formatting with better categorization and structure ([ffcd097](https://github.com/JyotirmoyDas05/OpenPilot/commit/ffcd097))
+
 # Changelog
 
 All notable changes will be documented automatically by semantic-release.
