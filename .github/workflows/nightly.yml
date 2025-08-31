@@ -1,0 +1,20 @@
+name: nightly
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # every day at midnight
+  workflow_dispatch: # allows manual triggering
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.set_should_run.outputs.should_run }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+      - name: set_should_run
+        id: set_should_run
+        run: echo "should_run=true" >> $GITHUB_OUTPUT
+      # steps for nightly job should be defined here or in a separate job, not nested

@@ -56,7 +56,7 @@ func Render(version string, compact bool, o Opts) string {
 
 	// Re-render with stretch if applicable.
 	word := renderWord(spacing, dec.StretchIndex, letterforms...)
-	crushWidth := lipgloss.Width(word)
+	brandWidth := lipgloss.Width(word)
 
 	// Apply gradient per line if enabled.
 	if dec.ApplyGradient {
@@ -69,9 +69,9 @@ func Render(version string, compact bool, o Opts) string {
 
 	// Surya and version.
 	metaRowGap := 1
-	maxVersionWidth := crushWidth - lipgloss.Width(charm) - metaRowGap
+	maxVersionWidth := brandWidth - lipgloss.Width(charm) - metaRowGap
 	version = ansi.Truncate(version, maxVersionWidth, "…")
-	gap := max(0, crushWidth-lipgloss.Width(charm)-lipgloss.Width(version))
+	gap := max(0, brandWidth-lipgloss.Width(charm)-lipgloss.Width(version))
 	metaRow := fg(o.BrandColor, charm) + strings.Repeat(" ", gap) + fg(o.VersionColor, version)
 	word = metaRow + "\n" + word // do not TrimSpace to preserve leading spaces
 
@@ -207,7 +207,7 @@ func Render(version string, compact bool, o Opts) string {
 // would not fit. This prevents generating oversized decorative fields that
 // get truncated and corrupt ANSI sequences when the terminal is narrow
 // (for example when a new chat opens in a narrow sidebar).
-func regulateForAvailableWidth(compact bool, o Opts, crushWidth int) (bool, Opts) {
+func regulateForAvailableWidth(compact bool, o Opts, brandWidth int) (bool, Opts) {
 	if o.Width <= 0 {
 		// no constraint provided; nothing to regulate
 		return compact, o
@@ -218,14 +218,14 @@ func regulateForAvailableWidth(compact bool, o Opts, crushWidth int) (bool, Opts
 	const gaps = 2          // space between left/word and word/right
 
 	// Minimum total width needed for the wide layout.
-	minTotal := crushWidth + leftWidthLocal + gaps + minRightWidth
+	minTotal := brandWidth + leftWidthLocal + gaps + minRightWidth
 
 	// For chat mode with stacked layout, be more lenient about width requirements
 	// since the stacked layout is more important for branding than decorative fields
 	if o.Width < minTotal {
 		// If we're very close to the requirement (within 6 chars), allow it but
 		// reduce the right field to make it fit
-		if o.Width >= crushWidth+leftWidthLocal+gaps {
+		if o.Width >= brandWidth+leftWidthLocal+gaps {
 			return compact, o // allow stacked layout with minimal right field
 		}
 		// Not enough room for even the basic layout — use compact rendering
@@ -365,10 +365,10 @@ func RenderChat(version string, o Opts) string {
 	pilotBase := renderWord(1, -1, pilotLetters...)
 	openW := lipgloss.Width(openBase)
 	pilotW := lipgloss.Width(pilotBase)
-	crushWidth := max(openW, pilotW)
+	brandWidth := max(openW, pilotW)
 
 	// Decide layout (treat combined height similar to wide layout).
-	dec := decideLayout(o.Width, crushWidth, 6, 15, len(openLetters)+len(pilotLetters))
+	dec := decideLayout(o.Width, brandWidth, 6, 15, len(openLetters)+len(pilotLetters))
 	if dec.Compact {
 		return Render(version, true, o)
 	}
@@ -406,9 +406,9 @@ func RenderChat(version string, o Opts) string {
 
 	const charm = " Surya™"
 	metaRowGap := 1
-	maxVersionWidth := crushWidth - lipgloss.Width(charm) - metaRowGap
+	maxVersionWidth := brandWidth - lipgloss.Width(charm) - metaRowGap
 	version = ansi.Truncate(version, maxVersionWidth, "…")
-	gap := max(0, crushWidth-lipgloss.Width(charm)-lipgloss.Width(version))
+	gap := max(0, brandWidth-lipgloss.Width(charm)-lipgloss.Width(version))
 	metaRow := fg(o.BrandColor, charm) + strings.Repeat(" ", gap) + fg(o.VersionColor, version)
 
 	fieldHeight := lipgloss.Height(open) + lipgloss.Height(pilot) + 2
@@ -434,7 +434,7 @@ func RenderChat(version string, o Opts) string {
 	}
 
 	content := metaRow + "\n" + open + "\n\n" + pilot
-	content = padLines(content, crushWidth)
+	content = padLines(content, brandWidth)
 	const hGap = " "
 	logo := lipgloss.JoinHorizontal(lipgloss.Top, leftField.String(), hGap, content, hGap, rightField.String())
 

@@ -1,0 +1,26 @@
+name: schema-update
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - internal/config/**
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Generate schema
+        run: go run . schema > schema.json
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update schema.json"

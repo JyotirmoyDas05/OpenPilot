@@ -63,4 +63,34 @@ Supporting Config:
 - dependabot.yml: weekly dependency update PRs for Go modules, actions, docker.
 - labeler.yml: regex rules for labeling issues/PRs.
 
+## Automated Releases (semantic-release)
+
+Semantic-release manages npm package versioning for the shim under `npm/`.
+
+Flow:
+1. Merge a commit to `main` with a Conventional Commit message.
+2. `semantic-release` workflow analyzes commits since last tag.
+3. Determines next version (major/minor/patch), updates `npm/package.json`, updates `CHANGELOG.md`, creates Git tag `vX.Y.Z`, publishes to npm.
+4. GitHub Release is created with generated notes; assets from GoReleaser (if tag also pushed manually) remain separate.
+
+Conventional Commit Examples:
+- feat: add session persistence flags
+- fix(tui): prevent crash on empty message list
+- chore(ci): migrate to semantic-release
+- docs: update README usage examples
+
+Breaking changes:
+- Include `BREAKING CHANGE:` paragraph in commit body or use `feat!:` / `fix!:` syntax.
+
+Manual Publishing:
+- Avoid manually bumping versions in `npm/package.json`; semantic-release owns it.
+- To force a release with no code changes use a `chore(release): trigger` style commit containing at least one conventional scope.
+
+Secrets Required:
+- `NPM_TOKEN` (Publish access to @suryastra scope) stored in repo secrets.
+
+Generated Files:
+- `CHANGELOG.md` updated automatically.
+- `npm/package.json` version updated automatically.
+
 Artifacts appear in `dist/`.

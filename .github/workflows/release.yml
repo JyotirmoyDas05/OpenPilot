@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: release
+
+on:
+  push:
+    tags:
+      - v*.*.*
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Install GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          version: latest
+          install-only: true
+      - name: Run GoReleaser
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: goreleaser release --clean
+      - name: Duplicate latest-style assets
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          VER=${TAG#v}
+          for f in dist/openpilot_${VER}_*; do
+            base=$(basename "$f")
+            latestName=$(echo "$base" | sed -E "s/openpilot_${VER}_/openpilot_/")
+            if [ ! -f "dist/$latestName" ]; then cp "$f" "dist/$latestName"; fi
+          done
+      - name: Create GitHub Release / Upload Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/openpilot_*
+          fail_on_unmatched_files: false

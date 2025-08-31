@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/surya/openpilot.git"
+    "url": "git+https://github.com/JyotirmoyDas05/openpilot.git"
   },
   "author": "Jyotirmoy Das",
   "license": "SEE LICENSE IN ../../LICENSE.md",

@@ -51,5 +51,5 @@ manpages/
 completions/
 !internal/tui/components/completions/
 
-# Temporarily ignore GitHub workflows & metadata until CI is ready
-.github/
+## (CI enabled) .github/ is tracked
+
