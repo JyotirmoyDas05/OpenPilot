@@ -26,7 +26,8 @@ archives:
       openpilot_
       {{- .Version }}_
       {{- .Os }}_
-      {{- .Arch }}
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else }}{{ .Arch }}{{ end }}
     wrap_in_directory: false
     format_overrides:
       - goos: windows
