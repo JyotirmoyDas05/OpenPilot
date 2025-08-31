@@ -65,14 +65,32 @@ debugLog('candidates: ' + candidates.map(c => c.name).join(', '));
 function download(url, file) {
   return new Promise((resolve, reject) => {
     const f = fs.createWriteStream(file);
-    https.get(url, res => {
+    
+    function handleResponse(res) {
+      // Handle redirects (GitHub asset downloads typically return 302)
+      if (res.statusCode === 301 || res.statusCode === 302) {
+        const redirectUrl = res.headers.location;
+        if (!redirectUrl) {
+          reject(new Error('Redirect without location header'));
+          return;
+        }
+        debugLog('following redirect to: ' + redirectUrl);
+        // Follow redirect
+        https.get(redirectUrl, handleResponse).on('error', reject);
+        return;
+      }
+      
       if (res.statusCode !== 200) {
         reject(new Error('HTTP ' + res.statusCode));
         return;
       }
+      
       res.pipe(f);
       f.on('finish', () => f.close(resolve));
-    }).on('error', reject);
+      f.on('error', reject);
+    }
+    
+    https.get(url, handleResponse).on('error', reject);
   });
 }
 
