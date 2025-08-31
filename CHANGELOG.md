@@ -1,3 +1,7 @@
+## <small>1.1.1 (2025-08-31)</small>
+
+* fix: prevent GitHub release asset conflicts by cleaning existing assets and specifying upload patter ([f666af0](https://github.com/JyotirmoyDas05/OpenPilot/commit/f666af0))
+
 ## 1.1.0 (2025-08-31)
 
 * feat: enhance npm README with improved documentation, platform support details, and better troublesh ([35588e9](https://github.com/JyotirmoyDas05/OpenPilot/commit/35588e9))
