@@ -30,30 +30,21 @@ jobs:
         with:
           version: latest
           install-only: true
-      - name: Install dependencies (ci with fallback)
+      - name: Install dependencies and plugins without modifying lockfile
         run: |
-          if [ -f package-lock.json ]; then
-            echo "Attempting npm ci (lockfile present)";
-            if ! npm ci; then
-              echo "npm ci failed; falling back to npm install";
-              npm install;
-            fi
-          else
-            echo "No lockfile found; running npm install";
-            npm install;
+          # Use --no-save to prevent lockfile changes
+          npm ci --prefer-offline --no-audit --no-fund
+          npm install --no-save @semantic-release/exec
+      - name: Verify clean working directory
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Working directory is dirty:"
+            git status --porcelain
+            echo "Cleaning up..."
+            git checkout -- .
+            git clean -fd
           fi
-      - name: Install semantic-release exec plugin
-        run: npm install --save-dev @semantic-release/exec
-      - name: Commit any lockfile changes before release
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          git add package-lock.json package.json npm/package-lock.json npm/package.json || true
-          git commit -m "chore: update lockfiles before release [skip ci]" || echo "No lockfile changes to commit"
-      - name: Clean build artifacts only
-        run: |
-          # Remove only build artifacts, not dependency files
-          rm -rf dist/ npm/dist/ || true
+          echo "Working directory is now clean"
       - name: Delete existing release assets to prevent conflicts
         uses: actions/github-script@v7
         with:
