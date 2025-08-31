@@ -1,3 +1,7 @@
+## <small>1.1.2 (2025-08-31)</small>
+
+* fix: integrate GoReleaser with semantic-release using exec plugin for proper release automation ([9968cb9](https://github.com/JyotirmoyDas05/OpenPilot/commit/9968cb9))
+
 ## <small>1.1.1 (2025-08-31)</small>
 
 * fix: prevent GitHub release asset conflicts by cleaning existing assets and specifying upload patter ([f666af0](https://github.com/JyotirmoyDas05/OpenPilot/commit/f666af0))
