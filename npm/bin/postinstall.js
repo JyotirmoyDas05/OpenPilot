@@ -27,17 +27,27 @@ if (!arch) fail('Unsupported architecture: ' + process.arch);
 function candidateAssets(v) {
   const baseVersionTag = v === 'latest' ? 'latest' : 'v' + v;
   const namePatterns = [];
-  // Canonical tar.gz (versioned or latest alias)
-  namePatterns.push(v === 'latest' ? `openpilot_${plat}_${arch}.tar.gz` : `openpilot_${v}_${plat}_${arch}.tar.gz`);
-  // Alternate dash style
-  namePatterns.push(`openpilot-${plat}-${arch}.tar.gz`);
-  // Legacy tgz
-  namePatterns.push(v === 'latest' ? `openpilot_${plat}_${arch}.tgz` : `openpilot_${v}_${plat}_${arch}.tgz`);
-  // Windows zip variants (GoReleaser may produce .zip for windows)
-  if (plat === 'windows') {
-    namePatterns.push(v === 'latest' ? `openpilot_${plat}_${arch}.zip` : `openpilot_${v}_${plat}_${arch}.zip`);
-    namePatterns.push(`openpilot-${plat}-${arch}.zip`);
+  const titlePlat = plat.charAt(0).toUpperCase() + plat.slice(1); // GoReleaser uses Title case for OS
+  const versPrefix = v === 'latest' ? '' : v + '_';
+
+  // Helper to push both lowercase and TitleCase OS variants (only adds distinct names)
+  function pushPattern(template) {
+    const variants = new Set();
+    variants.add(template(plat));
+    variants.add(template(titlePlat));
+    for (const p of variants) namePatterns.push(p);
   }
+
+  // Canonical tar.gz
+  pushPattern(osName => v === 'latest' ? `openpilot_${osName}_${arch}.tar.gz` : `openpilot_${v}_${osName}_${arch}.tar.gz`);
+  // Alternate dash style
+  pushPattern(osName => `openpilot-${osName}-${arch}.tar.gz`);
+  // Legacy tgz
+  pushPattern(osName => v === 'latest' ? `openpilot_${osName}_${arch}.tgz` : `openpilot_${v}_${osName}_${arch}.tgz`);
+  // Zip variants (primarily for Windows, but try generically)
+  pushPattern(osName => v === 'latest' ? `openpilot_${osName}_${arch}.zip` : `openpilot_${v}_${osName}_${arch}.zip`);
+  pushPattern(osName => `openpilot-${osName}-${arch}.zip`);
+
   return namePatterns.map(n => ({
     url: `https://github.com/${repo}/releases/${baseVersionTag === 'latest' ? 'latest/download' : 'download/' + baseVersionTag}/${n}`,
     name: n
