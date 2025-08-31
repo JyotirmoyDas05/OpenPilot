@@ -44,18 +44,16 @@ jobs:
           fi
       - name: Install semantic-release exec plugin
         run: npm install --save-dev @semantic-release/exec
-      - name: Clean working directory for GoReleaser
+      - name: Commit any lockfile changes before release
         run: |
-          # Remove any build artifacts and reset to clean state
-          git reset --hard
-          git clean -fdx
-          # Restore node_modules since we just cleaned everything
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install
-          fi
-          npm install --save-dev @semantic-release/exec
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add package-lock.json package.json npm/package-lock.json npm/package.json || true
+          git commit -m "chore: update lockfiles before release [skip ci]" || echo "No lockfile changes to commit"
+      - name: Clean build artifacts only
+        run: |
+          # Remove only build artifacts, not dependency files
+          rm -rf dist/ npm/dist/ || true
       - name: Delete existing release assets to prevent conflicts
         uses: actions/github-script@v7
         with:
