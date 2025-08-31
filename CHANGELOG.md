@@ -1,3 +1,7 @@
+## <small>1.0.2 (2025-08-31)</small>
+
+* fix: enhance asset name patterns and improve archive extraction handling in postinstall script ([d2642ca](https://github.com/JyotirmoyDas05/OpenPilot/commit/d2642ca))
+
 ## <small>1.0.1 (2025-08-31)</small>
 
 * fix: enhance asset handling in release workflow and improve error fallback in postinstall script ([f22c69c](https://github.com/JyotirmoyDas05/OpenPilot/commit/f22c69c))
