@@ -1,3 +1,8 @@
+## <small>1.1.4 (2025-08-31)</small>
+
+* fix: update GoReleaser comment for better asset description ([ef466d3](https://github.com/JyotirmoyDas05/OpenPilot/commit/ef466d3))
+* chore: remove lint workflow configuration ([6b98226](https://github.com/JyotirmoyDas05/OpenPilot/commit/6b98226))
+
 ## <small>1.1.3 (2025-08-31)</small>
 
 * fix: remove invalid --skip-validate flag from goreleaser command ([69e46cd](https://github.com/JyotirmoyDas05/OpenPilot/commit/69e46cd))
