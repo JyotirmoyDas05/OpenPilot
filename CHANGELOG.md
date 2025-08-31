@@ -1,3 +1,7 @@
+## 1.1.0 (2025-08-31)
+
+* feat: enhance npm README with improved documentation, platform support details, and better troublesh ([35588e9](https://github.com/JyotirmoyDas05/OpenPilot/commit/35588e9))
+
 # Changelog
 
 All notable changes will be documented automatically by semantic-release.
