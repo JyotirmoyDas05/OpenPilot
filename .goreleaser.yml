@@ -29,10 +29,10 @@ before:
     - mkdir completions
     - rm -rf manpages
     - mkdir manpages
-  - sh -c 'go run . completion bash >./completions/openpilot.bash'
-  - sh -c 'go run . completion zsh >./completions/openpilot.zsh'
-  - sh -c 'go run . completion fish >./completions/openpilot.fish'
-  - sh -c 'go run . man | gzip -c >./manpages/openpilot.1.gz'
+    - sh -c 'go run . completion bash >./completions/openpilot.bash'
+    - sh -c 'go run . completion zsh >./completions/openpilot.zsh'
+    - sh -c 'go run . completion fish >./completions/openpilot.fish'
+    - sh -c 'go run . man | gzip -c >./manpages/openpilot.1.gz'
 
 # gomod:
 #   proxy: true
