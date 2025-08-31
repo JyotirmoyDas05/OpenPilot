@@ -44,6 +44,18 @@ jobs:
           fi
       - name: Install semantic-release exec plugin
         run: npm install --save-dev @semantic-release/exec
+      - name: Clean working directory for GoReleaser
+        run: |
+          # Remove any build artifacts and reset to clean state
+          git reset --hard
+          git clean -fdx
+          # Restore node_modules since we just cleaned everything
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+          npm install --save-dev @semantic-release/exec
       - name: Delete existing release assets to prevent conflicts
         uses: actions/github-script@v7
         with:

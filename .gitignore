@@ -15,6 +15,10 @@
 node_modules/
 npm/node_modules/
 
+# Build artifacts and distribution files
+dist/
+npm/dist/
+
 # Binaries for programs and plugins
 go.work
 go.work.sum
