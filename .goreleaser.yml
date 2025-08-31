@@ -1,5 +1,6 @@
 # yaml-language-server: $schema=https://goreleaser.com/static/schema-pro.json
 # vim: set ts=2 sw=2 tw=0 fo=jcroql
+# Asset naming fixed to use x86_64 for cross-platform compatibility
 version: 2
 
 project_name: openpilot
