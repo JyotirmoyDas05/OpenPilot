@@ -1,5 +1,11 @@
 ## <small>1.0.4 (2025-08-31)</small>
 
+* fix: dummy commit to force version 1.0.5 ([a8b260e](https://github.com/JyotirmoyDas05/OpenPilot/commit/a8b260e))
+* fix: update default repository in postinstall script to JyotirmoyDas05/openpilot ([de56df3](https://github.com/JyotirmoyDas05/OpenPilot/commit/de56df3))
+* chore(release): 1.0.4 [skip ci] ([bc70aa2](https://github.com/JyotirmoyDas05/OpenPilot/commit/bc70aa2))
+
+## <small>1.0.4 (2025-08-31)</small>
+
 * fix: update default repository in postinstall script to JyotirmoyDas05/openpilot ([de56df3](https://github.com/JyotirmoyDas05/OpenPilot/commit/de56df3))
 
 ## <small>1.0.3 (2025-08-31)</small>
