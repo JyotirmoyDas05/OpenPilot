@@ -46,7 +46,7 @@ jobs:
           fi
           echo "Working directory is now clean"
       - name: Delete existing release assets to prevent conflicts
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const { owner, repo } = context.repo;
