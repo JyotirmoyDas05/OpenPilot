@@ -16,9 +16,9 @@ require (
 	github.com/charmbracelet/bubbles/v2 v2.0.0-beta.1.0.20250807144536-86f332629539
 	github.com/charmbracelet/bubbletea/v2 v2.0.0-beta.4.0.20250813213544-5cc219db8892
 	github.com/charmbracelet/catwalk v0.4.12
-	github.com/charmbracelet/fang v0.3.1-0.20250711140230-d5ebb8c1d674
+	github.com/charmbracelet/fang v0.4.3
 	github.com/charmbracelet/glamour/v2 v2.0.0-20250811143442-a27abb32f018
-	github.com/charmbracelet/lipgloss/v2 v2.0.0-beta.3.0.20250721205738-ea66aa652ee0
+	github.com/charmbracelet/lipgloss/v2 v2.0.0-beta.3.0.20250917201909-41ff0bf215ea
 	github.com/charmbracelet/log/v2 v2.0.0-20250226163916-c379e29ff706
 	github.com/charmbracelet/x/ansi v0.10.1
 	github.com/charmbracelet/x/exp/charmtone v0.0.0-20250708181618-a60a724ba6c3
@@ -75,7 +75,7 @@ require (
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/charmbracelet/colorprofile v0.3.2 // indirect
-	github.com/charmbracelet/ultraviolet v0.0.0-20250813213450-50737e162af5
+	github.com/charmbracelet/ultraviolet v0.0.0-20250915111650-81d4262876ef
 	github.com/charmbracelet/x/cellbuf v0.0.14-0.20250811133356-e0c5dbe5ea4a // indirect
 	github.com/charmbracelet/x/exp/slice v0.0.0-20250611152503-f53cdd7e01ef
 	github.com/charmbracelet/x/term v0.2.1
@@ -99,7 +99,7 @@ require (
 	github.com/klauspost/compress v1.18.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
 	github.com/klauspost/pgzip v1.2.6 // indirect
-	github.com/lucasb-eyer/go-colorful v1.2.0
+	github.com/lucasb-eyer/go-colorful v1.3.0
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.16 // indirect
@@ -141,8 +141,8 @@ require (
 	golang.org/x/image v0.26.0 // indirect
 	golang.org/x/net v0.41.0 // indirect
 	golang.org/x/oauth2 v0.30.0 // indirect
-	golang.org/x/sync v0.16.0 // indirect
-	golang.org/x/sys v0.35.0
+	golang.org/x/sync v0.17.0 // indirect
+	golang.org/x/sys v0.36.0
 	golang.org/x/term v0.33.0 // indirect
 	golang.org/x/text v0.28.0
 	golang.org/x/time v0.8.0 // indirect
